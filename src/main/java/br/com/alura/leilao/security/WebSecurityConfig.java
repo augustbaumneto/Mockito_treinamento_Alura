@@ -10,7 +10,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+//import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+//import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.LocaleResolver;
@@ -34,16 +36,47 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.csrf().disable();
 	}
 
+/*	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+		
+		http.authorizeHttpRequests((authorizeHttpRequests) ->
+		authorizeHttpRequests
+			.antMatchers(HttpMethod.GET, "/").permitAll()
+			.antMatchers(HttpMethod.GET, "/leiloes").permitAll()
+			.anyRequest().authenticated())
+		.formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/leiloes", true).permitAll())
+		.logout(logout -> {
+			logout.logoutUrl("/logout").logoutSuccessUrl("/leiloes");
+		})
+		.csrf((csrf) -> csrf.disable());
+
+		return http.build();
+	}
+*/	
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authenticationProvider());
 	}
 
+
+/*
+	@Bean
+	public void registerProvider(AuthenticationManagerBuilder auth) {
+		auth.authenticationProvider(authenticationProvider());
+	}
+*/	
+	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/css/**");
 	}
 
+/*	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+		return (web) -> web.ignoring().antMatchers("/css/**");
+	}
+*/	
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return new UserDetailsServiceImpl();
