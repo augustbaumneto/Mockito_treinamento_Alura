@@ -1,5 +1,6 @@
 package br.com.alura.leilao.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,15 @@ import br.com.alura.leilao.model.Leilao;
 @Service
 public class FinalizarLeilaoService {
 
-	@Autowired
 	private LeilaoDao leiloes;
-
+	private EnviadorDeEmails enviadoremails;
+	
+	@Autowired
+	public FinalizarLeilaoService (LeilaoDao leiloes, EnviadorDeEmails enviadoremails) {
+		this.leiloes = leiloes;
+		this.enviadoremails =enviadoremails;
+	}
+	
 	public void finalizarLeiloesExpirados() {
 		List<Leilao> expirados = leiloes.buscarLeiloesExpirados();
 		expirados.forEach(leilao -> {
@@ -22,11 +29,12 @@ public class FinalizarLeilaoService {
 			leilao.setLanceVencedor(maiorLance);
 			leilao.fechar();
 			leiloes.salvar(leilao);
+			enviadoremails.enviarEmailVencedorLeilao(maiorLance);
 		});
 	}
 
 	private Lance maiorLanceDadoNoLeilao(Leilao leilao) {
-		List<Lance> lancesDoLeilao = leilao.getLances();
+		List<Lance> lancesDoLeilao = new ArrayList<>(leilao.getLances());
 		lancesDoLeilao.sort((lance1, lance2) -> {
 			return lance2.getValor().compareTo(lance1.getValor());
 		});
