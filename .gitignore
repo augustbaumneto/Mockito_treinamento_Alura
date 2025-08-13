@@ -32,3 +32,18 @@ build/
 ### VS Code ###
 .vscode/
 
+# Eclipse Core
+.project
+.classpath
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+
+# Locally stored "Eclipse launch configurations"
+*.launch
